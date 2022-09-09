@@ -1,11 +1,6 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {initializeApp} from "firebase/app";
+import {getFirestore, addDoc, collection, getDocs, doc, getDoc, query, where, onSnapshot} from "firebase/firestore";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyCBwGgJXl4URpp0aIvA7nNGnslra9PxW7U",
     authDomain: "simplestore-3df57.firebaseapp.com",
@@ -16,6 +11,72 @@ const firebaseConfig = {
     measurementId: "G-NFB7NTTHC9"
 };
 
-// Initialize Firebase
- export const appFireBase = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(appFireBase);
+const appFireBase = initializeApp(firebaseConfig);
+
+export const db = getFirestore(appFireBase)
+
+export type ContentItemType={
+    image:string
+    price:number
+    title:string
+    id:string
+}
+
+export const getStaff = async () => {
+    const docSnap = await getDoc<{ [content: string]: ContentItemType[] }>(doc(db, "storeContent", "content"));
+    if (docSnap.exists()) {
+      return {resultCode:0, data:docSnap.data()}
+    } else {
+        return {resultCode:1, data:null}
+    }
+
+}
+
+
+export const getAllDocument = async () => {
+    const q = query(collection(db, "storeContent"), where("price", "==", 1));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+    });
+}
+export const onSubScribeDoc = () => {
+    const unSubscribe = onSnapshot(doc(db, "cities", "SF"), {includeMetadataChanges: true}, (doc) => {
+        const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+        console.log(source, " data: ", doc.data());
+        console.log("Current data: ", doc.data());
+    },(error) => {console.log(error)});
+    unSubscribe()
+}
+export const onSubScribeAllDoc = () => {
+    const q = query(collection(db, "storeContent"));
+    const unSubscribe = onSnapshot(q, (querySnapshot) => {
+        const product: any = [];
+        querySnapshot.forEach((doc) => {
+            product.push(doc.data().name);
+        });
+        console.log("Current cities in CA: ", product.join(", "));
+    },(error) => {console.log(error)});
+    unSubscribe()
+}
+export const SubscribeOnChanges = () => {
+    const q = query(collection(db, "storeContent"))
+    const unSubscribe = onSnapshot(q, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    console.log("New city: ", change.doc.data());
+                }
+                if (change.type === "modified") {
+                    console.log("Modified city: ", change.doc.data());
+                }
+                if (change.type === "removed") {
+                    console.log("Removed city: ", change.doc.data());
+                }
+            });
+        }, (error) => {console.log(error)}
+    );
+    unSubscribe()
+}
+
+

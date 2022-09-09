@@ -7,20 +7,28 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import realism from '../Assets/realizm.jpg'
 import {Paper} from "@mui/material";
+import {FC, memo} from "react";
+import {ContentItemType} from "../FireBase/FireBase";
 
-export  const ContentCard=() =>{
+type ContentCardType={
+   contentItem:ContentItemType
+}
+
+export  const ContentCard:FC<ContentCardType>= memo(({contentItem}) =>{
+    const {title,id,image,price}=contentItem
+
     return (
-        <Paper elevation={5} >
+        <Paper elevation={5}>
         <Card>
             <CardMedia
                 component="img"
                 height="140"
-                image={realism}
+                src={image}
                 alt="realism"
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    realism
+                    {title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     Lizards are a widespread group of squamate reptiles, with over 6,000
@@ -34,4 +42,4 @@ export  const ContentCard=() =>{
         </Card>
         </Paper>
     );
-}
+})
