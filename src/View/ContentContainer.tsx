@@ -12,7 +12,7 @@ export const ContentContainer = () => {
         if (Object.keys(content).length===0){
             dispatch(thunks.getContent())
         }
-    }, [dispatch])
+    }, [dispatch,content])
 
     const mappedContentCards = useMemo(() =>
             content.map((item, index) =>

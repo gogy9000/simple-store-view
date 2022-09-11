@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {memo} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,8 +13,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import {Task} from "@mui/icons-material";
-import {memo} from "react";
+import {ShoppingCartBadge} from "./ShoppingCartBadge";
 
 export const AppBarPrimary = memo(() =>{
 
@@ -149,15 +149,7 @@ export const AppBarPrimary = memo(() =>{
 
                         <Box sx={{flexGrow: 1}}/>
                         <Box sx={{display: {xs: 'none', md: 'flex'}}}>
-                            <IconButton size="large" aria-label="show 5 new mails" color="inherit">
-                                <Badge
-                                    badgeContent={1}
-                                    color="error">
-                                    <Task/>
-
-                                </Badge>
-                            </IconButton>
-
+                            <ShoppingCartBadge/>
                             <IconButton
                                 size="large"
                                 edge="end"
@@ -190,3 +182,4 @@ export const AppBarPrimary = memo(() =>{
         );
     }
 )
+
