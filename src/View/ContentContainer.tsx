@@ -5,7 +5,7 @@ import {useAppDispatch, useAppSelector} from "../Common/CustomHooks/CustomHooks"
 import {thunks} from "../BLL/Content/ContentSlice";
 
 export const ContentContainer = () => {
-    const content = useAppSelector(state => state.contentState.content)
+    const content = useAppSelector(state => state.contentState.loadedContent)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
