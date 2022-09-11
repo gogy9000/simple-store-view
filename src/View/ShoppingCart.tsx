@@ -5,6 +5,7 @@ import {ContentCard} from "./ContentCard";
 import {ContainerView} from "./ContainerView";
 import {Path} from "../App";
 import {EmptyContent} from "./EmptyContent";
+import {ShoppingCartTabBar} from "./ShoppingCartTabBar";
 
 export const ShoppingCart = () => {
     const shoppingCartContent = useAppSelector(state => state.contentState.shoppingCart)
@@ -18,7 +19,10 @@ export const ShoppingCart = () => {
         , [shoppingCartContent])
 
     return (
-        <ContainerView emptyComponent={<EmptyContent navigatePath={Path.home}/>}>
+        <ContainerView
+            emptyComponent={<EmptyContent navigatePath={Path.home}/>}
+            tabBar={<ShoppingCartTabBar/>}
+        >
             {mappedContentCards}
         </ContainerView>
     );
