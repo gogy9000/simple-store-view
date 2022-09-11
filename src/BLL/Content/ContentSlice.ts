@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ContentItemType, getStaff} from "../../FireBase/FireBase";
-import {InitialStateType, SelectedProductType} from "./types";
+import {getStaff} from "../../FireBase/FireBase";
+import {InitialStateType} from "./types";
 
 const getContent = createAsyncThunk("getContent", async (arg, thunkAPI) => {
     try {
@@ -19,24 +19,33 @@ export const thunks = {getContent}
 
 export const contentSlice = createSlice({
     name: "contentSlice",
+
     initialState: {
         loadedContent: [],
         shoppingCart: [],
         isLoadingContent: "idle",
         errorsList: {}
     } as InitialStateType,
+
     reducers: {
         addProductToCart: (state, action: PayloadAction<{ id: string }>) => {
             const selectedProduct = state.loadedContent.find(item => item.id === action.payload.id)
             if (selectedProduct) {
-                state.shoppingCart.push({...selectedProduct, numberOfProductUnits: 1})
+              const  addedInShoppingCartProduct=state.shoppingCart.find(item => item.id === action.payload.id)
+               if(addedInShoppingCartProduct){
+                   addedInShoppingCartProduct.numberOfProductUnits+=1
+               }else {
+                   state.shoppingCart.push({...selectedProduct, numberOfProductUnits: 1})
+               }
             } else {
                 state.errorsList = {...state.errorsList, [action.payload.id]: "no such product"}
             }
         },
+
         removeProductToCart: (state, action: PayloadAction<{ id: string }>) => {
             state.shoppingCart = state.shoppingCart.filter(item => item.id !== action.payload.id)
         },
+
         addUnitOfProduct: (state, action: PayloadAction<{ id: string }>) => {
             state.shoppingCart.forEach(item => {
                 if (item.id === action.payload.id) {
@@ -44,6 +53,7 @@ export const contentSlice = createSlice({
                 }
             })
         },
+
         removeUnitOfProduct: (state, action: PayloadAction<{ id: string }>) => {
             state.shoppingCart.forEach(item => {
                 if (item.id === action.payload.id) {

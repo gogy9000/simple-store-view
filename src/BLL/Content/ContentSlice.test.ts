@@ -24,6 +24,12 @@ describe("contentSlice test", () => {
         let newState = contentSlice.reducer(initialState, action)
         expect(newState.shoppingCart.length).toBe(2)
     })
+    it("content dont should be duplicate", () => {
+        let action = contentSlice.actions.addProductToCart({id: "2"})
+        let newState = contentSlice.reducer(initialState, action)
+        let changedState = contentSlice.reducer(newState, action)
+        expect(changedState.shoppingCart.length).toBe(2)
+    })
 
     it("content should be removed in shoppingCart", () => {
         let action = contentSlice.actions.removeProductToCart({id: "1"})
