@@ -1,8 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getStaff} from "../../FireBase/FireBase";
+import {getStaff, placeAnOrder} from "../../FireBase/FireBase";
 import {InitialStateType} from "./types";
+import {AppRootStateType} from "../Store";
 
-const getContent = createAsyncThunk("getContent", async (arg, thunkAPI) => {
+const getContent = createAsyncThunk("contentSlice/getContent", async (arg, thunkAPI) => {
     try {
         const response = await getStaff()
         if (response.resultCode === 0) {
@@ -15,7 +16,17 @@ const getContent = createAsyncThunk("getContent", async (arg, thunkAPI) => {
         return thunkAPI.rejectWithValue({error: "some Error"})
     }
 })
-export const thunks = {getContent}
+const fetchOrder=createAsyncThunk("contentSlice/fetchOrder",async (arg,thunkAPI)=>{
+    const state= thunkAPI.getState() as AppRootStateType
+    try{
+        const res = await placeAnOrder({shoppingCart:state.contentState.shoppingCart})
+        return res
+    }catch (e) {
+        return e
+    }
+})
+
+export const thunks = {getContent,fetchOrder}
 
 export const contentSlice = createSlice({
     name: "contentSlice",

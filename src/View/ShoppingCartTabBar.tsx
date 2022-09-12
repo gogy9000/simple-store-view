@@ -3,7 +3,8 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import {useAppSelector} from "../Common/CustomHooks/CustomHooks";
+import {useAppDispatch, useAppSelector} from "../Common/CustomHooks/CustomHooks";
+import {thunks} from "../BLL/Content/ContentSlice";
 
 export const ShoppingCartTabBar = () => {
     const overPrice = useAppSelector(state =>
@@ -11,11 +12,15 @@ export const ShoppingCartTabBar = () => {
             .reduce((ac, item) =>
                 ac + item.price * item.numberOfProductUnits, 0)
     )
+    const dispatch=useAppDispatch()
+    const onPlaceAnOrder=()=>{
+        dispatch(thunks.fetchOrder())
+    }
 
     return (
 
             <StyledCard  m={1} p={1}>
-                <Button>Place an order</Button>
+                <Button onClick={onPlaceAnOrder}>Place an order</Button>
                 <Typography color={"#1976d2"} variant={"h6"}>Total: {overPrice} $</Typography>
             </StyledCard>
 
